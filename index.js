@@ -1,5 +1,6 @@
 var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
     preload: preload, create: create, update: update});
+
     var ball;
     var paddle;
     var bricks;
@@ -10,14 +11,16 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
     var lives = 3;
     var livesText;
     var lifeLostText;
+    var textStyle = { font: '18px Arial', fill: '#0095DD' };
 
+    
      //---------------------------------------------------------//
 
     function preload() {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
-        game.stage.backgroundColor = '#eee';
+        game.stage.backgroundColor = '#D3D3D3';
         game.load.image('ball', 'img/ball.png');
         game.load.image('paddle', 'img/paddle.png');
         game.load.image('brick', 'img/brick.png');
@@ -34,10 +37,8 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
         ball.body.collideWorldBounds = true;
         ball.body.bounce.set(1);
         ball.checkWorldBounds = true;
-        ball.events.onOutOfBounds.add(function(){
-            alert('Game over!');
-            location.reload();
-        }, this);
+        ball.events.onOutOfBounds.add(ballLeaveScreen, this);
+        // arrumar essa função //
     
         paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
         paddle.anchor.set(0.5,1);
@@ -46,14 +47,15 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
     
         initBricks();
 
-        scoreText = game.add.text(5, 5, 'Points: 0',{ font: '18px Arial', fill: '#0095DD' });
-
-        livesText = game.add.text(game.world.width-5, 5, 'Lives: ' + lives, { font: '18px Arial', fill: '#0095DD'});
+        scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
+        livesText = game.add.text(game.world.width-5, 5, 'Lives: '+lives, textStyle);
         livesText.anchor.set(1,0);
-        lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Vida perdida, clique para continuar', { font: '18px Arial', fill: '#0095DD'});
+        lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Vida perdida, clique para continuar', textStyle);
         lifeLostText.anchor.set(0.5);
-        lifeLostText.vesible = false;
-
+        lifeLostText.visible = false;
+        
+    
+    
     }
 
      //---------------------------------------------------------//
@@ -112,3 +114,22 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
             Location.reload();
         }
     }
+
+    function ballLeaveScreen() {
+        lives--;
+        if(lives) {
+            livesText.setText('Lives: '+lives);
+            lifeLostText.visible = true;
+            ball.reset(game.world.width*0.5, game.world.height-25);
+            paddle.reset(game.world.width*0.5, game.world.height-5);
+            game.input.onDown.addOnce(function(){
+                lifeLostText.visible = false;
+                ball.body.velocity.set(150, -150);
+            }, this);
+        }
+        else {
+            alert('You lost, game over!');
+            location.reload();
+        }
+    }
+    
