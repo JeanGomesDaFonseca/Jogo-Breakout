@@ -82,4 +82,15 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
         brick.kill();
         score += 10;
         scoreText.setText('Points: '+ score);
+
+        var count_alive = 0;
+        for (i = 0; i< bricks.children.length; i++){
+            if (bricks.children[i].alive == true) {
+                count_alive++;
+            }
+        }
+        if (count_alive == 0){
+            alert('Você ganhou o jogo, PARABÉNS!');
+            Location.reload();
+        }
     }
