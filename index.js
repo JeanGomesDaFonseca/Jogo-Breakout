@@ -12,7 +12,6 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
     var livesText;
     var lifeLostText;
     var textStyle = { font: '18px Arial', fill: '#0095DD' };
-
     
      //---------------------------------------------------------//
 
@@ -25,6 +24,7 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
         game.load.image('paddle', 'img/paddle.png');
         game.load.image('brick', 'img/brick.png');
     }
+
     //---------------------------------------------------------//
 
     function create() {
@@ -37,8 +37,7 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
         ball.body.collideWorldBounds = true;
         ball.body.bounce.set(1);
         ball.checkWorldBounds = true;
-        ball.events.onOutOfBounds.add(ballLeaveScreen, this);
-        // arrumar essa função //
+        ball.events.onOutOfBounds.add(ballLeaveScreen, this)
     
         paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
         paddle.anchor.set(0.5,1);
@@ -53,9 +52,6 @@ var game = new Phaser.Game(480, 320, Phaser.Canvas, null, {
         lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Vida perdida, clique para continuar', textStyle);
         lifeLostText.anchor.set(0.5);
         lifeLostText.visible = false;
-        
-    
-    
     }
 
      //---------------------------------------------------------//
